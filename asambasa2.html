@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Quiz: Acids & Bases</title>
+    <style>
+        /* Main Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 650px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        
+        /* Main Content Area */
+        .content {
+            padding: 30px;
+        }
+        
+        /* pH Scale Visual */
+        .ph-scale {
+            margin: 20px 0;
+            height: 25px;
+            background: linear-gradient(to right, 
+                #d81b60, /* Very acidic - pH 0-2 */
+                #f06292, /* Acidic - pH 3-4 */
+                #ffb74d, /* Weakly acidic - pH 5-6 */
+                #81c784, /* Neutral - pH 7 */
+                #4fc3f7, /* Weakly basic - pH 8-9 */
+                #7986cb, /* Basic - pH 10-12 */
+                #5e35b1  /* Very basic - pH 13-14 */
+            );
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .ph-label {
+            position: absolute;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            top: -20px;
+            color: #555;
+        }
+        
+        /* Question Section */
+        .question-container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .progress {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        
+        .substance-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        /* Option Buttons */
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .option-btn {
+            min-width: 120px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .acid-btn {
+            background-color: #e74c3c;
+        }
+        
+        .acid-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+        
+        .neutral-btn {
+            background-color: #27ae60;
+        }
+        
+        .neutral-btn:hover {
+            background-color: #219653;
+            transform: translateY(-3px);
+        }
+        
+        .base-btn {
+            background-color: #3498db;
+        }
+        
+        .base-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        
+        /* Feedback Display */
+        .feedback {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .correct {
+            background-color: #e3f5e9;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .incorrect {
+            background-color: #fae9ea;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-explanation {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        /* Next and Reset Buttons */
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .next-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Results Screen */
+        .results-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .final-score {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        .score-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Acid-Base Chemistry Quiz</h1>
+            <p>Test your knowledge of everyday acids and bases</p>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="content">
+            <!-- pH Scale Visual -->
+            <div class="ph-scale">
+                <span class="ph-label" style="left: 7%;">pH 0</span>
+                <span class="ph-label" style="left: 50%;">pH 7</span>
+                <span class="ph-label" style="left: 93%;">pH 14</span>
+            </div>
+            
+            <!-- Game Screen -->
+            <div id="game-screen">
+                <div class="question-container">
+                    <div class="progress" id="progress">Question 1 of 10</div>
+                    <div class="substance-name" id="substance-name">Loading...</div>
+                    
+                    <div class="options">
+                        <button class="option-btn acid-btn" onclick="checkAnswer('acid')">Acid</button>
+                        <button class="option-btn neutral-btn" onclick="checkAnswer('neutral')">Neutral</button>
+                        <button class="option-btn base-btn" onclick="checkAnswer('base')">Base</button>
+                    </div>
+                </div>
+                
+                <div id="feedback" class="feedback hidden">
+                    <div class="feedback-title" id="feedback-title">Correct!</div>
+                    <div class="feedback-explanation" id="feedback-explanation"></div>
+                </div>
+                
+                <button id="next-btn" class="action-btn next-btn hidden">Next Question</button>
+            </div>
+            
+            <!-- Results Screen -->
+            <div id="results-screen" class="results-container hidden">
+                <h2>Quiz Complete!</h2>
+                <div class="final-score">You scored: <span id="score-value">0</span>/10</div>
+                <div class="score-message" id="score-message">Great job testing your chemistry knowledge!</div>
+                <button class="action-btn reset-btn" onclick="resetGame()">Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Database of substances with classifications and explanations
+        const substanceDatabase = [
+            {
+                name: "Vinegar",
+                type: "acid",
+                explanation: "Vinegar contains acetic acid and has a pH of around 2.5. It gives vinegar its sour taste and is used in cooking and cleaning."
+            },
+            {
+                name: "Lemon Juice",
+                type: "acid",
+                explanation: "Lemon juice is acidic due to its citric acid content, with a pH of about 2-3. This acidity gives citrus fruits their characteristic sour taste."
+            },
+            {
+                name: "Coffee",
+                type: "acid",
+                explanation: "Coffee contains various organic acids like chlorogenic acid, giving it a pH between 4.5-5.5, making it mildly acidic."
+            },
+            {
+                name: "Orange Juice",
+                type: "acid",
+                explanation: "Orange juice contains citric acid with a pH around 3.5, making it acidic. This acidity contributes to its refreshing taste."
+            },
+            {
+                name: "Tomato Juice",
+                type: "acid",
+                explanation: "Tomato juice has a pH around 4.1-4.6 due to its organic acid content, primarily citric and malic acids."
+            },
+            {
+                name: "Soda/Cola",
+                type: "acid",
+                explanation: "Carbonated beverages like cola contain carbonic acid and phosphoric acid, giving them a pH around 2.5-3.5, making them quite acidic."
+            },
+            {
+                name: "Apple Juice",
+                type: "acid",
+                explanation: "Apple juice contains malic acid and has a pH around 3.5-4.0, making it moderately acidic."
+            },
+            {
+                name: "Battery Acid",
+                type: "acid",
+                explanation: "Battery acid is sulfuric acid with a very low pH of around 0-1, making it extremely acidic and dangerous."
+            },
+            {
+                name: "Pure Water",
+                type: "neutral",
+                explanation: "Pure water has a pH of exactly 7, making it the defining standard for neutrality on the pH scale."
+            },
+            {
+                name: "Blood",
+                type: "neutral",
+                explanation: "Human blood is slightly alkaline with a pH around 7.4, but it's carefully regulated and considered near neutral for body function."
+            },
+            {
+                name: "Milk",
+                type: "neutral",
+                explanation: "Fresh milk has a pH around 6.5-6.7, making it very close to neutral. It becomes more acidic as it sours."
+            },
+            {
+                name: "Eggs",
+                type: "neutral",
+                explanation: "Egg whites are slightly alkaline (pH ~8), while yolks are neutral to slightly acidic, making whole eggs close to neutral overall."
+            },
+            {
+                name: "Soap",
+                type: "base",
+                explanation: "Most soaps are basic/alkaline with a pH around 9-10. This helps remove acidic oils and dirt from skin and surfaces."
+            },
+            {
+                name: "Baking Soda",
+                type: "base",
+                explanation: "Baking soda (sodium bicarbonate) is a mild base with a pH around 8.5-9, making it useful for neutralizing acids."
+            },
+            {
+                name: "Toothpaste",
+                type: "base",
+                explanation: "Most toothpastes are slightly basic with a pH around 8-9, which helps neutralize acidic conditions that can damage teeth."
+            },
+            {
+                name: "Household Ammonia",
+                type: "base",
+                explanation: "Cleaning ammonia is a strong base with a pH around 11-12, making it effective for cutting grease and dissolving oils."
+            },
+            {
+                name: "Milk of Magnesia",
+                type: "base",
+                explanation: "This antacid contains magnesium hydroxide with a pH around 10.5, which helps neutralize excess stomach acid."
+            },
+            {
+                name: "Oven Cleaner",
+                type: "base",
+                explanation: "Oven cleaners contain strong bases like sodium hydroxide with a pH around 13-14, making them extremely basic and caustic."
+            },
+            {
+                name: "Bleach",
+                type: "base",
+                explanation: "Household bleach (sodium hypochlorite) is strongly basic with a pH around 12-13, contributing to its cleaning and disinfecting power."
+            },
+            {
+                name: "Drain Cleaner",
+                type: "base",
+                explanation: "Drain cleaners often contain lye (sodium hydroxide), giving them a strong basic pH around 14, which helps dissolve organic materials."
+            }
+        ];
+        
+        // Game variables
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        
+        // Initialize the game when the page loads
+        window.onload = function() {
+            resetGame();
+            
+            // Add event listener for Next Question button
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+        };
+        
+        // Reset and restart the game
+        function resetGame() {
+            // Select 10 random substances from our database
+            currentQuestions = getRandomSubstances(substanceDatabase, 10);
+            
+            // Reset game variables
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Show game screen, hide results
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            
+            // Hide any existing feedback
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // Display first question
+            displayCurrentQuestion();
+        }
+        
+        // Get random substances from database
+        function getRandomSubstances(substances, count) {
+            // Create a copy of the array to avoid modifying the original
+            const shuffled = [...substances];
+            
+            // Shuffle the array
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            // Return the first 'count' items
+            return shuffled.slice(0, count);
+        }
+        
+        // Display the current question
+        function displayCurrentQuestion() {
+            const currentSubstance = currentQuestions[currentQuestionIndex];
+            
+            // Update progress indicator
+            document.getElementById('progress').textContent = `Question ${currentQuestionIndex + 1} of 10`;
+            
+            // Display substance name
+            document.getElementById('substance-name').textContent = currentSubstance.name;
+            
+            // Enable all option buttons
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(button => {
+                button.disabled = false;
+            });
+        }
+        
+        // Check the player's answer
+        function checkAnswer(selectedType) {
+            const currentSubstance = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedType === currentSubstance.type;
+            
+            // Update score if correct
+            if (isCorrect) {
+                score++;
+            }
+            
+            // Disable all option buttons to prevent multiple answers
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden', 'correct', 'incorrect');
+            feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Set feedback title
+            const feedbackTitle = document.getElementById('feedback-title');
+            if (isCorrect) {
+                feedbackTitle.textContent = "Correct! ✓";
+            } else {
+                feedbackTitle.textContent = `Incorrect! ✗ ${currentSubstance.name} is a ${currentSubstance.type}.`;
+            }
+            
+            // Set explanation
+            document.getElementById('feedback-explanation').textContent = currentSubstance.explanation;
+            
+            // Show the next button
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+        
+        // Move to the next question or end the game
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Check if all questions have been answered
+            if (currentQuestionIndex >= currentQuestions.length) {
+                showResults();
+            } else {
+                // Hide feedback and next button
+                document.getElementById('feedback').classList.add('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+                
+                // Show next question
+                displayCurrentQuestion();
+            }
+        }
+        
+        // Show the final results
+        function showResults() {
+            // Hide game screen, show results screen
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            
+            // Display final score
+            document.getElementById('score-value').textContent = score;
+            
+            // Display appropriate message based on score
+            const scoreMessage = document.getElementById('score-message');
+            if (score >= 9) {
+                scoreMessage.textContent = "Amazing! You're a chemistry expert!";
+            } else if (score >= 7) {
+                scoreMessage.textContent = "Great job! You have solid knowledge of acids and bases.";
+            } else if (score >= 5) {
+                scoreMessage.textContent = "Good effort! Keep learning about chemistry.";
+            } else {
+                scoreMessage.textContent = "Keep practicing! Chemistry can be tricky but you'll get it!";
+            }
+        }
+    </script>
+</body>
+</html>
